@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="clicker_style.css">
+</head>
+<body>
+    <h1>I-Clicker</h1>
+    <hr>
+
+    <main>
+        <div class="stats">
+            <p class="power">POWER: <span id="upgradeLVL">1</span></p>
+            <p class="auto">AUTO: <span id="autoLVL" class="disabled">DISABLED</span></p>
+            <p class="warp">WARP: <span id="warpLVL">0</span></p>
+        </div>
+
+        <p id="count">0</p>
+        <button id="button" onclick="buttonClick()">click</button>
+
+        <div class="btns">
+            <button id="upgrade" disabled onclick="upgradeClick()">upgrade<br>10</button>
+            <button id="auto" disabled onclick="autoClick()">auto-clicker<br>100</button>
+            <button id="warp" disabled onclick="warpGame()">warp<br>2000</button>
+        </div>
+    </main>
+
+    <hr>
+    <footer>2026 Чебоксары &copy; | version: betav1.0</footer>
+
+    <script>
+        //сделать ачивки
+        //сделать сокр типо 10к 4м там
+        const button = document.getElementById('button');
+        const count = document.getElementById('count');
+        const upgrade = document.getElementById('upgrade');
+        const upgradeLVL = document.getElementById('upgradeLVL');
+        const auto = document.getElementById('auto');
+        const autoLVL = document.getElementById('autoLVL');
+        const warp = document.getElementById('warp');
+        const warpLVL = document.getElementById('warpLVL');
+    
+
+        let countOfWarp = 1;
+        let warpCost = 2000;
+        let isAuto = false;
+        let clicks = 2000;
+        let clickPower = 1;
+        let cost = 10;
+        let warpCostMultiplyer = 1;
+        
+ 
+        function clicksReq(number) {
+            if (clicks < number) {
+                alert('У вас недостаточно кликов');
+                return false;
+            }
+            return true
+        }
+
+        function renderClicks() {
+            let multiplier = countOfWarp === 1 ? 1 : countOfWarp * 0.8;
+            count.innerText = parseFloat(clicks.toFixed(1));
+            warpLVL.innerText = countOfWarp - 1;
+            upgradeLVL.innerText = parseFloat((clickPower*multiplier).toFixed(1));
+
+            if (isAuto) {
+                autoLVL.innerText = 'ENABLED';
+                autoLVL.className = 'enabled';
+            } else {
+                autoLVL.innerText = 'DISABLED';
+                autoLVL.className = 'disabled';
+            }
+
+            if (clicks > cost) {
+                upgrade.removeAttribute('disabled');
+            } else {
+                upgrade.setAttribute('disabled', 'true');
+            }
+
+            if (clicks > 100) {
+                auto.removeAttribute('disabled');
+            } else {
+                auto.setAttribute('disabled', 'true');
+            }
+
+            if (isAuto) {
+                auto.setAttribute('disabled', 'true');
+            }
+
+            if (clicks > warpCost) {
+                warp.removeAttribute('disabled');
+            } else {
+                warp.setAttribute('disabled', 'true');
+            }
+        }
+
+        function warpGame() {
+            if (!clicksReq(warpCost)) return;
+            clicks -= warpCost;
+            countOfWarp += 1;
+            warpCostMultiplyer *= 2;
+            warpCost *= warpCostMultiplyer;
+            warp.innerText = 'warp\n' + warpCost;
+            renderClicks();
+        }
+
+        function autoClick() {
+            if (!clicksReq(100)) return;
+            clicks -= 100;
+            isAuto = true;
+            auto.setAttribute('disabled', 'true')
+            renderClicks();
+        }
+
+        function buttonClick() {
+            let multiplier = countOfWarp === 1 ? 1 : countOfWarp * 0.8;
+            clicks += clickPower * multiplier;
+            renderClicks();
+        }
+
+        function upgradeClick() {
+            if (!clicksReq(cost)) return;
+            clicks -= cost;
+            cost *= 1.7;
+            clickPower *= 1.5;
+
+            upgrade.innerText = 'upgrade\n' + parseFloat(cost.toFixed(1));
+            renderClicks();
+        }
+
+        setInterval(() => {
+            if (isAuto) {
+                let multiplier = countOfWarp === 1 ? 1 : countOfWarp * 0.8;
+                clicks += clickPower * multiplier;
+                renderClicks();
+            }
+        }, 500);
+    </script>
+</body>
+</html>
