@@ -179,6 +179,22 @@ main {
     color: #ffffff;
 }
 
+#debug:not(:disabled) {
+    border-color: #bb1919d4;
+    color: #bb1919d4;
+   width: 150px;
+    height: 48px;
+    font-size: 18px;
+}
+
+#debug:not(:disabled):hover {
+    background: #bb1919d4;
+    color: #ffffff;
+    width: 150px;
+    height: 48px;
+    font-size: 18px;
+}
+
 footer {
     text-align: center;
     font-size: 14px;
